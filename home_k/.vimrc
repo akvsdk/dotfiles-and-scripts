@@ -1,6 +1,6 @@
 " vim:set et sw=2 ts=2 tw=78 ft=vim:
 " Github: https://github.com/Karmenzind/dotfiles-and-scripts
-" Last Modified: 2024-01-18 02:12:27
+" Last Modified: 2024-01-21 20:05:26
 
 let s:is_win = has("win32")
 if s:is_win
@@ -124,7 +124,7 @@ Plug 'liuchengxu/vista.vim'
 " Plug 'Shougo/echodoc.vim'
 Plug 'w0rp/ale' " Asynchronous Lint Engine
 if has("nvim")
-  if !s:is_win | Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} | endif
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
   Plug 'kevinhwang91/promise-async' | Plug 'kevinhwang91/nvim-ufo'
 
@@ -500,8 +500,9 @@ augroup END
 function! s:UpdateHeader() abort
   let bufpath = resolve(glob('%'))
   if bufpath =~ '.*dotfiles-and-scripts.*' && !empty(&cms)
-    " let pat = printf(&cms, " ") .. "Last Modified:"
-    let pat = "Last Modified: "
+    let pref = &cms =~ ".* %s"? printf(&cms, ""): printf(&cms, " ")
+    let pref = substitute(pref, "/", "\\\\/", "g")
+    let pat = pref .. "Last Modified: "
     let nr = line('$') 
     let endnr = nr > 10? 10: nr
     let c = printf("1,%ss/%s.*/%s/", endnr, pat, pat .. strftime("%Y-%m-%d %T"))
@@ -519,7 +520,6 @@ augroup file_headers
         \ normal! Go
   au BufNewFile *.py
         \ call setline(1, '#!/usr/bin/env python')                 |
-        \ call append(line('.'), '# -*- coding: utf-8 -*-')        |
         \ call append(line('.')+1, '')                             |
         \ normal! Go
   au BufNewFile *.{cpp,cc}
@@ -846,7 +846,7 @@ nmap <Leader>w <Plug>(easymotion-overwin-w)
 call s:NoSearchCabbrev("UE", "UltiSnipsEdit")
 let g:UltiSnipsExpandTrigger = '<c-j>'
 " FIXME (k): <2022-03-23> doesn't work any more
-let g:UltiSnipsListSnippets = '<F9>'
+" let g:UltiSnipsListSnippets = '<F9>'
 let g:UltiSnipsEditSplit = 'context'
 let g:UltiSnipsUsePythonVersion = 3
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = g:vimroot .. '/mysnippets'

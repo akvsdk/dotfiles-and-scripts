@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 # Github: https://github.com/Karmenzind/dotfiles-and-scripts
+# Last Modified: 2024-01-18 16:22:31
 
 $psVersion = $PSVersionTable.PSVersion.Major
 

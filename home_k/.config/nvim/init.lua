@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 -- Github: https://github.com/Karmenzind/dotfiles-and-scripts
--- Last Modified: 2024-01-18 02:15:21
+-- Last Modified: 2024-01-21 20:05:07
 
 vim.g.loaded = 1
 vim.g.loaded_netrw = 1
@@ -12,19 +12,24 @@ local mopts = { noremap = true, silent = true }
 local is_win = vim.fn.has("win32") == 1
 local nvimpid = vim.fn.getpid()
 
-if is_win then
-    vim.o.runtimepath = "~/vimfiles," .. vim.o.runtimepath .. ",~/vimfiles/after"
-    vim.o.packpath = vim.o.runtimepath
-
-    local function find_pyexe()
+local function find_pybin()
+    if is_win then
         for _, pat in ipairs({ [[C:\Program Files\Python3*\python.exe]], [[~\AppData\Local\Programs\Python\Python*\python.exe]] }) do
             local expanded = vim.fn.glob(pat, false, true)
             if #expanded ~= 0 then return expanded[#expanded] end
         end
-        error("Failed to locate python.exe")
+    else
+        return "/usr/bin/python3"
     end
+end
+local py3bin = find_pybin()
+if py3bin == nil or not vim.fn.executable(py3bin) then error("Failed to locate python.exe") end
 
-    vim.g.python3_host_prog = find_pyexe()
+if is_win then
+    vim.o.runtimepath = "~/vimfiles," .. vim.o.runtimepath .. ",~/vimfiles/after"
+    vim.o.packpath = vim.o.runtimepath
+
+    vim.g.python3_host_prog = py3bin
     vim.cmd("source ~/_vimrc")
 
     -- shell
@@ -39,7 +44,7 @@ else
     vim.o.runtimepath = "~/.vim," .. vim.o.runtimepath .. ",~/.vim/after"
     vim.o.packpath = vim.o.runtimepath
 
-    vim.g.python3_host_prog = "/usr/bin/python3"
+    vim.g.python3_host_prog = py3bin
     vim.g.ruby_host_prog = vim.fn.trim(vim.fn.system("find $HOME/.gem -regex '.*ruby/[^/]+/bin/neovim-ruby-host'"))
     vim.cmd("source ~/.vimrc")
 end
@@ -70,21 +75,7 @@ if vim.g.fzf_layout["window"] == nil and vim.g.fzf_layout["tmux"] == nil then
     vim.api.nvim_create_autocmd({ "FileType" }, { group = "fzf", pattern = "fzf", command = "setl ls=0 nosmd noru" })
 end
 
-vim.cmd([[
-tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
-" tnoremap <A-h> <C-\><C-N><C-w>h
-" tnoremap <A-j> <C-\><C-N><C-w>j
-" tnoremap <A-k> <C-\><C-N><C-w>k
-" tnoremap <A-l> <C-\><C-N><C-w>l
-" inoremap <A-h> <C-\><C-N><C-w>h
-" inoremap <A-j> <C-\><C-N><C-w>j
-" inoremap <A-k> <C-\><C-N><C-w>k
-" inoremap <A-l> <C-\><C-N><C-w>l
-" nnoremap <A-h> <C-w>h
-" nnoremap <A-j> <C-w>j
-" nnoremap <A-k> <C-w>k
-" nnoremap <A-l> <C-w>l
-]])
+vim.cmd([[tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi']])
 
 local function nvim_tree_on_attach(bufnr)
     local api = require("nvim-tree.api")
@@ -131,9 +122,13 @@ if os.getenv("TMUX") == nil or vim.fn.executable("fzf") == 0 then
     })
 end
 
-if vim.g.plugs["nvim-treesitter"] ~= nil then
+local function plugged(p) return vim.g.plugs[p] ~= nil end
+
+if plugged("nvim-treesitter") then
     local tsconf = try_require("nvim-treesitter.configs")
-    if tsconf ~= nil then tsconf.setup({ ensure_installed = { "c", "lua", "vim", "vimdoc", "query" }, auto_install = true }) end
+    if tsconf ~= nil then tsconf.setup({ ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python" }, auto_install = true }) end
+else
+    vim.fn.EchoWarn("treesitter not imported")
 end
 
 require("nvim-tree").setup({
@@ -165,10 +160,7 @@ require("mason-lspconfig").setup({
 
 require("alpha").setup(require("alpha.themes.startify").config)
 
-require("todo-comments").setup({
-    highlight = { pattern = [[.*<(KEYWORDS)\s*]] },
-    search = { pattern = [[\b(KEYWORDS)\b]] },
-})
+require("todo-comments").setup({ highlight = { pattern = [[.*<(KEYWORDS)\s*]] }, search = { pattern = [[\b(KEYWORDS)\b]] } })
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldclose:]]
@@ -234,7 +226,6 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next, mopts)
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, mopts)
 
 local on_attach = function(_, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
 
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -317,7 +308,6 @@ cmp.setup.cmdline(":", {
     sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 })
 
--- Set up lspconfig.
 local lsp_cap = require("cmp_nvim_lsp").default_capabilities()
 lsp_cap.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
 
@@ -452,7 +442,7 @@ end, mopts)
 local dap = require("dap")
 vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
 dap.defaults.fallback.terminal_win_cmd = "50vsplit new"
-require("dap-python").setup("/usr/bin/python")
+require("dap-python").setup(py3bin)
 require("dap-go").setup({ dap_configurations = { { type = "go", name = "Attach remote", mode = "remote", request = "attach" } } })
 require("nvim-dap-virtual-text").setup({ commented = true })
 require("dapui").setup({
@@ -565,8 +555,6 @@ if vim.g.colors_name == nil then
         "atomic",
         "boo",
         "gruvbox",
-        "github_dark_high_contrast",
-        "github_light_high_contrast",
         "nord",
         "kat.nvim",
         "kat.nwim",
@@ -576,6 +564,8 @@ if vim.g.colors_name == nil then
         "tokyonight-day",
         "tokyonight-moon",
         "seoul256",
+        "github_dark_high_contrast",
+        "github_light_high_contrast",
     })
 
     local cololike = function(p) return vim.g.colors_name ~= nil and vim.g.colors_name:find(p, 1, true) == 1 end
