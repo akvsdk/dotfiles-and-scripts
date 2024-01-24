@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 -- Github: https://github.com/Karmenzind/dotfiles-and-scripts
--- Last Modified: 2024-01-21 20:05:07
+-- Last Modified: 2024-01-24 21:10:55
 
 vim.g.loaded = 1
 vim.g.loaded_netrw = 1
@@ -155,8 +155,9 @@ vim.diagnostic.config({
 
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "lua_ls", "pyright", "vimls", "bashls", "marksman", "omnisharp", "gopls", "powershell_es" },
+    ensure_installed = { "lua_ls", "pyright", "vimls", "bashls", "marksman", "omnisharp", "gopls" },
 })
+-- XXX (k): <2024年01月24日 星期三 17时01分39秒> powershell_es
 
 require("alpha").setup(require("alpha.themes.startify").config)
 
@@ -391,7 +392,7 @@ if vim.fn.glob(ps_bundle_path) ~= "" then
         settings = { powershell = { codeFormatting = { Preset = "OTBS" } } },
     })
 else
-    vim.fn.EchoWarn("Invalid ps bundle path")
+    vim.fn.EchoWarn("Invalid ps_bundle_path")
 end
 
 require("nvim-autopairs").setup({ disable_filetype = { "markdown" } })
