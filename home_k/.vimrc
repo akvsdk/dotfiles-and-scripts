@@ -1,6 +1,6 @@
 " vim:set et sw=2 ts=2 tw=78 ft=vim:
 " Github: https://github.com/Karmenzind/dotfiles-and-scripts
-" Last Modified: 2024-01-21 20:05:26
+" Last Modified: 2024-01-25 16:09:47
 
 let s:is_win = has("win32")
 if s:is_win
@@ -444,6 +444,8 @@ augroup filetype_formats
         \ setlocal tabstop=4         |
         \ setlocal softtabstop=4
 
+  au FileType yaml.docker-compose setlocal sts=2 ts=2 sw=2
+
   au FileType help setlocal nu
 
   au FileType make setlocal noexpandtab
@@ -503,12 +505,16 @@ function! s:UpdateHeader() abort
     let pref = &cms =~ ".* %s"? printf(&cms, ""): printf(&cms, " ")
     let pref = substitute(pref, "/", "\\\\/", "g")
     let pat = pref .. "Last Modified: "
-    let nr = line('$') 
+    let nr = line('$')
     let endnr = nr > 10? 10: nr
     let c = printf("1,%ss/%s.*/%s/", endnr, pat, pat .. strftime("%Y-%m-%d %T"))
-    normal m"
-    call execute(c)
-    normal `"
+    try
+      normal m"
+      call execute(c)
+      normal `"
+    catch
+      call EchoWarn(v:exception)
+    endtry
   endif
 endfunction
 
@@ -1354,7 +1360,7 @@ augroup END
 " --------------------------------------------
 
 function! EchoWarn(msg)
-  echohl WarningMsg | echom '[✘]' .. a:msg | echohl None
+  echohl WarningMsg | echom '[✘] ' .. a:msg | echohl None
 endfunction
 
 " edit rc files
