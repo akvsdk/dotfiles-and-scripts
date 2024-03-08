@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 -- Github: https://github.com/Karmenzind/dotfiles-and-scripts
--- Last Modified: 2024-02-26 10:38:24
+-- Last Modified: 2024-03-01 19:38:33
 
 vim.g.loaded = 1
 vim.g.loaded_netrw = 1
@@ -154,7 +154,10 @@ end
 require("nvim-tree").setup({
     on_attach = nvim_tree_on_attach,
     view = { number = true, float = { enable = false, open_win_config = { border = "double" } } },
-    filters = { git_ignored = false },
+    filters = {
+        git_ignored = false,
+        custom = {[[\v(__pycache__|^\..*cache$)]]},
+    },
 })
 vim.keymap.set("n", "<leader>n", "<cmd>NvimTreeToggle<CR>", mopts)
 vim.keymap.set("n", "<leader>N", "<cmd>NvimTreeFindFile<CR>", mopts)
@@ -325,7 +328,7 @@ cmp.setup({
 })
 
 cmp.setup.filetype("gitcommit", {
-    sources = cmp.config.sources({ { name = "cmp_git" }, {name = "emoji"} }, { { name = "buffer" } }),
+    sources = cmp.config.sources({ { name = "cmp_git" }, { name = "emoji" } }, { { name = "buffer" } }),
 })
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -401,6 +404,7 @@ lsp.lua_ls.setup({
 -- })
 -- lsp.java_language_server.setup({})
 -- lsp.autotools_ls.setup{}
+lsp.robotframework_ls.setup({})
 lsp.denols.setup({ on_attach = on_attach, capabilities = lsp_cap })
 lsp.jdtls.setup({ on_attach = on_attach, capabilities = lsp_cap }) -- java >=17
 lsp.omnisharp.setup({

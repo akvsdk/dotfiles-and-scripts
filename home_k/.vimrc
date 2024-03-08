@@ -927,7 +927,7 @@ let g:ale_fixers = {
       \  'go': ['gofmt', 'goimports'],
       \  'python': ['isort', 'autopep8', 'FixSurroundedWhiteSpaces', 'autoflake'],
       \  'json': ['prettier'],
-      \  'sql': ['pgformatter'],
+      \  'sql': ['sqlfluff'],
       \  'vue': ['eslint', 'prettier'],
       \  'yaml': ['prettier'],
       \  'css': ['prettier'],
