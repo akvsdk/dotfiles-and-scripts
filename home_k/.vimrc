@@ -926,7 +926,7 @@ let g:ale_fixers = {
       \  'sh': ['shfmt'],
       \  'go': ['gofmt', 'goimports'],
       \  'python': ['isort', 'autopep8', 'FixSurroundedWhiteSpaces', 'autoflake'],
-      \  'json': ['prettier'],
+      \  'json': ['jq'],
       \  'sql': ['sqlfluff'],
       \  'vue': ['eslint', 'prettier'],
       \  'yaml': ['prettier'],
@@ -977,7 +977,8 @@ nmap <silent> <Leader>at <Plug>(ale_toggle)
 call s:NoSearchCabbrev("AF", "ALEFix")
 
 " /* for vim-visual-multi */
-let g:VM_maps = {"Find Under": '<space>n'}
+" let g:VM_maps = {"Find Under": '<space>n'}
+let g:VM_maps = {"Find Under": '<leader><leader>n'}
 
 " /* for vim-markdown | markdown-preview */
 " vim-markdown

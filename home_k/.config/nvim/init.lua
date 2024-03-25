@@ -1,6 +1,5 @@
 #!/usr/bin/env lua
 -- Github: https://github.com/Karmenzind/dotfiles-and-scripts
--- Last Modified: 2024-03-01 19:38:33
 
 vim.g.loaded = 1
 vim.g.loaded_netrw = 1

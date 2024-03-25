@@ -80,7 +80,7 @@ endsnippet
 # logger
 # --------------------------------------------
 
-snippet simplelogging "description"
+snippet loggingsimple "description"
 import logging
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -426,14 +426,14 @@ def test_`!p snip.rv = t[1].replace(" ", "_").lower()`(session):
 endsnippet
 
 
-snippet ocase "Allure Order Case"
-@allure.title("${1}")
-@allure.feature("Order")
-@allure.story("Transaction")
-def test_`!p snip.rv = t[1].replace(" ", "_").lower()`(session):
-    _, rd = request_api("post", postfix2url("/order/`!p snip.rv = t[1].replace(" ", "_").lower()`"), session)
-    assert rd.get("message") == "SUCCESS"
-endsnippet
+# snippet ocase "Allure Order Case"
+# @allure.title("${1}")
+# @allure.feature("Order")
+# @allure.story("Transaction")
+# def test_`!p snip.rv = t[1].replace(" ", "_").lower()`(session):
+#     _, rd = request_api("post", postfix2url("/order/`!p snip.rv = t[1].replace(" ", "_").lower()`"), session)
+#     assert rd.get("message") == "SUCCESS"
+# endsnippet
 
 
 snippet prtz "Pytest Parametrize"

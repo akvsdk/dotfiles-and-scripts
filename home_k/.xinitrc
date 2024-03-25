@@ -1,5 +1,6 @@
 #!/bin/sh
 # vim:ts=4:sw=4:expandtab:ft=sh
+
 session=${1:-i3wm}
 echo ">>> Starting $session..."
 
@@ -90,6 +91,7 @@ xfce | xfce4)
 	exec startxfce4
 	;;
 *)
-    exec $session
+    echo ">> Executing: $@"
+    exec "$@"
     ;;
 esac
