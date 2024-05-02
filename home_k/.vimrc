@@ -167,6 +167,7 @@ if has("nvim")
   " debug
   Plug 'mfussenegger/nvim-dap'
   Plug 'mfussenegger/nvim-dap-python'
+  Plug 'nvim-neotest/nvim-nio'
   Plug 'leoluz/nvim-dap-go'
   Plug 'rcarriga/nvim-dap-ui'
   Plug 'rcarriga/cmp-dap'

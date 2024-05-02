@@ -203,7 +203,7 @@ vim.keymap.set("n", "zm", require("ufo").closeFoldsWith) -- closeAllFolds == clo
 
 local ufo_handler = function(virtText, lnum, endLnum, width, truncate)
     local newVirtText = {}
-    local suffix = (" ⋯   %d "):format(endLnum - lnum)
+    local suffix = (' ⋯  󰁂 %d '):format(endLnum - lnum)
     local sufWidth = vim.fn.strdisplaywidth(suffix)
     local targetWidth = width - sufWidth
     local curWidth = 0
@@ -215,21 +215,19 @@ local ufo_handler = function(virtText, lnum, endLnum, width, truncate)
         else
             chunkText = truncate(chunkText, targetWidth - curWidth)
             local hlGroup = chunk[2]
-            table.insert(newVirtText, { chunkText, hlGroup })
+            table.insert(newVirtText, {chunkText, hlGroup})
             chunkWidth = vim.fn.strdisplaywidth(chunkText)
             -- str width returned from truncate() may less than 2nd argument, need padding
             if curWidth + chunkWidth < targetWidth then
-                suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
             end
             break
         end
         curWidth = curWidth + chunkWidth
     end
-    table.insert(newVirtText, { suffix, "MoreMsg" })
+    table.insert(newVirtText, {suffix, 'MoreMsg'})
     return newVirtText
 end
-
-require("ufo").setup({ close_fold_kinds = { "imports", "comment" }, fold_virt_text_handler = ufo_handler })
 
 -- Set up nvim-cmp.
 local cmp = require("cmp")
@@ -342,7 +340,8 @@ cmp.setup.cmdline(":", {
     sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 })
 
-local lsp_cap = require("cmp_nvim_lsp").default_capabilities()
+-- local lsp_cap = require("cmp_nvim_lsp").default_capabilities()
+local lsp_cap = vim.lsp.protocol.make_client_capabilities()
 lsp_cap.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
 
 lsp.pyright.setup({ on_attach = on_attach, capabilities = lsp_cap })
@@ -607,6 +606,10 @@ require("lualine").setup({
         lualine_z = { "tabs" },
     },
 })
+
+-- FIXME (k): <2024-05-02 22:24> 
+-- require("ufo").setup({ close_fold_kinds_for_ft = { "imports", "comment" }, fold_virt_text_handler = ufo_handler })
+require('ufo').setup()
 
 local function rchoose(l)
     return l[math.random(1, #l)]
