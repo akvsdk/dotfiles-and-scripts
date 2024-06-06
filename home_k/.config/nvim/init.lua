@@ -636,6 +636,10 @@ if vim.g.colors_name == nil then
         "github_dark_high_contrast",
         "github_light_high_contrast",
         "default",
+        "zenburn",
+        "lyla",
+        "madeofcode",
+        "obsidian",
     })
 
     local cololike = function(p)
