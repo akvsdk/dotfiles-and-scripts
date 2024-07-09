@@ -219,6 +219,8 @@ Plug 'junegunn/vim-slash' " enhancing in-buffer search experience
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 if has("nvim")
+  " Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
+
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 else
@@ -929,6 +931,7 @@ let g:ale_fixers = {
       \  'html': ['prettier'],
       \  'java': ['clang-format'],
       \  'javascript': ['prettier', 'importjs'],
+      \  'typescript': ['prettier', 'importjs'],
       \  'json': ['jq'],
       \  'lua': ['stylua'],
       \  'php': ['php_cs_fixer'],
