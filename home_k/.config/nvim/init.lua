@@ -157,6 +157,20 @@ else
 end
 
 require("nvim-tree").setup({
+    hijack_netrw = true,
+    hijack_directories = {
+        enable = true,
+        auto_open = true,
+    },
+    -- disable_netrw = true,
+    hijack_unnamed_buffer_when_opening = true,
+    update_focused_file = {
+        enable = true,
+        update_root = {
+            enable = true,
+            ignore_list = {},
+        },
+    },
     on_attach = nvim_tree_on_attach,
     view = { number = true, float = { enable = false, open_win_config = { border = "double" } } },
     filters = {
@@ -647,7 +661,8 @@ if vim.g.colors_name == nil then
         "atomic",
         "boo",
         "gruvbox",
-        "nord",
+        -- "nord",
+        -- "molokai",
         "kat.nvim",
         "kat.nwim",
         "bluloco",
@@ -663,6 +678,7 @@ if vim.g.colors_name == nil then
         "lyla",
         "madeofcode",
         "obsidian",
+        "nightfox",
     })
 
     local cololike = function(p)

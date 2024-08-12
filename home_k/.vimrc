@@ -303,6 +303,7 @@ if has('nvim')
   Plug 'rockerBOO/boo-colorscheme-nvim'
   Plug 'kyazdani42/blue-moon' " no airline theme
   Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+  Plug 'EdenEast/nightfox.nvim'
 endif
 if !has('win32')
   Plug has('nvim')? 'kyazdani42/nvim-web-devicons': 'ryanoasis/vim-devicons' " load after other plugins
@@ -491,7 +492,7 @@ augroup filetype_formats
   " \ set listchars+=precedes:<,extends:>
   " \ set textwidth=79 |
 
-  au BufNewFile,BufRead *.js,*.html,*.css,*.yml,*.toml,*.vue
+  au BufNewFile,BufRead *.js,*.ts,*.html,*.css,*.yml,*.toml,*.vue
         \ setlocal tabstop=2     |
         \ setlocal softtabstop=2 |
         \ setlocal shiftwidth=2
@@ -983,7 +984,7 @@ let g:ale_history_log_output = 1
 let g:ale_sql_sqlfluff_options = '--dialect mysql'
 
 nmap <silent> <Leader>al <Plug>(ale_lint)
-nmap <silent> <Leader>af <Plug>(ale_fix)
+nmap <Leader>af <Plug>(ale_fix)
 nmap <silent> <Leader>at <Plug>(ale_toggle)
 call s:NoSearchCabbrev("AF", "ALEFix")
 
@@ -1329,6 +1330,7 @@ if has('nvim')
     \ 'go': 'nvim_lsp',
     \ 'yaml': 'nvim_lsp',
     \ 'toml': 'nvim_lsp',
+    \ 'typescript': 'nvim_lsp',
     \ }
 elseif Plugged("coc.nvim")
   let g:vista_executive_for = {
@@ -1634,7 +1636,7 @@ let g:neosolarized_visibility = "high"
 
 " /* for vim-atomic */
 " let g:atomic_mode = 3 " Cyan soft
-let g:atomic_mode = 7  " night soft
+let g:atomic_mode = 21
 let g:atomic_italic = 1
 let g:atomic_bold = 1
 let g:atomic_underline = 1
